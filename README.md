@@ -64,6 +64,13 @@ var resp struct {
 	}
 }
 err := client.Do(req, &resp)
+
+// Inspect the returned GraphQL errors
+var gqlerrs gql.ErrorList
+if errors.As(err, &gqlerrs) {
+	// Check path
+	println(gqlerrs[0].Path)
+}
 ```
 
 ## Thanks

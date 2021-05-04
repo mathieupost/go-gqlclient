@@ -1,23 +1,19 @@
 // Package gqlclient provides a client for interacting with a GraphQL endpoint.
 //
-//  import (
-//      gql "github.com/weavedev/go-gqlclient"
-//  )
-//
 // Create a client (safe to share across requests)
-//  client := gql.NewClient(
+//  client := gqlclient.NewClient(
 //      "https://localhost/graphql",
 //      // Optionally supply options:
 //      // Set default headers.
-//      gql.WithDefaultHeader("Authorization", "Bearer " + token),
+//      gqlclient.WithDefaultHeader("Authorization", "Bearer " + token),
 //      // Use a custom http.Client.
-//      gql.WithHTTPClient(customClient),
-//      // Use another request builder (default: gql.JSONRequestBuilder).
-//      gql.WithRequestBuilder(gql.MultipartRequestBuilder),
+//      gqlclient.WithHTTPClient(customClient),
+//      // Use another request builder (default: gqlclient.JSONRequestBuilder).
+//      gqlclient.WithRequestBuilder(gqlclient.MultipartRequestBuilder),
 //  )
 //
 // Make a request
-//  req := gql.NewRequest(`
+//  req := gqlclient.NewRequest(`
 //      query ($key: String!) {
 //          item(id: $key) {
 //              field1
@@ -27,11 +23,11 @@
 //      }`,
 //      // Optionally supply options:
 //      // Set any variables.
-//      gql.WithVar("key", "value"),
+//      gqlclient.WithVar("key", "value"),
 //      // Set header fields.
-//      gql.WithHeader("Cache-Control", "no-cache"),
+//      gqlclient.WithHeader("Cache-Control", "no-cache"),
 //      // Pass a Context for the request (default: context.Background()).
-//      gql.WithContext(ctx),
+//      gqlclient.WithContext(ctx),
 //  )
 //
 // Do the request and capture the response.
@@ -43,4 +39,11 @@
 //      }
 //  }
 //  err := client.Do(req, &resp)
+//
+// Inspect the returned GraphQL errors
+//  var gqlerrs gqlclient.ErrorList
+//  if errors.As(err, &gqlerrs) {
+//      // Check path
+//      println(gqlerrs[0].Path)
+//  }
 package gqlclient

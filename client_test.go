@@ -260,8 +260,8 @@ func (s *SuiteClient) TestGQLError() {
 	err := c.Do(gql.NewRequest(""), &resp)
 
 	httpClient.AssertExpectations(s.T())
-	var herr gql.ErrorList
-	s.Assert().ErrorAs(err, &herr)
-	s.Assert().Len(herr, 1)
-	s.Equal("invalid query", herr[0].Message)
+	var gqlerrs gql.ErrorList
+	s.Assert().ErrorAs(err, &gqlerrs)
+	s.Assert().Len(gqlerrs, 1)
+	s.Equal("invalid query", gqlerrs[0].Message)
 }
