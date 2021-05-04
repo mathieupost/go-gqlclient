@@ -19,11 +19,11 @@
 // Make a request
 //  req := gql.NewRequest(`
 //      query ($key: String!) {
-//        item(id: $key) {
-//          field1
-//          field2
-//          field3
-//        }
+//          item(id: $key) {
+//              field1
+//              field2
+//              field3
+//          }
 //      }`,
 //      // Optionally supply options:
 //      // Set any variables.

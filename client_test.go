@@ -231,7 +231,7 @@ func (s *SuiteClient) TestBadResponseError() {
 	httpClient.
 		On("Do", mock.AnythingOfType("*http.Request")).
 		Return(&http.Response{
-			// An empty string is not valid JSON and will throw an error on decoding.
+			// An empty string is not valid json and will throw an error on decoding.
 			Body:       ioutil.NopCloser(strings.NewReader("")),
 			StatusCode: http.StatusOK,
 		}, nil)
@@ -252,7 +252,7 @@ func (s *SuiteClient) TestGQLError() {
 	httpClient.
 		On("Do", mock.AnythingOfType("*http.Request")).
 		Return(&http.Response{
-			// An empty string is not valid JSON and will throw an error on decoding.
+			// An empty string is not valid json and will throw an error on decoding.
 			Body: ioutil.NopCloser(strings.NewReader(`{
 				"data": {"value": "some data"},
 				"errors": [{
