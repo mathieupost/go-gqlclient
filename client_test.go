@@ -24,14 +24,6 @@ func TestSuiteClient(t *testing.T) {
 	suite.Run(t, &s)
 }
 
-func (s *SuiteClient) TestDefault() {
-	c := gql.NewClient("test")
-
-	s.Equal("test", c.Endpoint)
-	s.Equal(map[string]string{"Accept": "application/json; charset=utf-8"}, c.DefaultHeaders)
-	s.Equal(http.DefaultClient, c.HTTPClient)
-}
-
 func (s *SuiteClient) TestClientOption() {
 	clientOption := new(mocks.ClientOption)
 	clientOption.

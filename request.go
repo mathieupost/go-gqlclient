@@ -4,8 +4,8 @@ import "context"
 
 // Request is a GraphQL request.
 type Request struct {
-	Context   context.Context        `json:"-"`
-	Headers   map[string]string      `json:"-"`
+	ctx       context.Context        `json:"-"`
+	headers   map[string]string      `json:"-"`
 	Query     string                 `json:"query"`
 	Variables map[string]interface{} `json:"variables,omitempty"`
 }
@@ -13,8 +13,8 @@ type Request struct {
 // NewRequest makes a new Request with the specified string.
 func NewRequest(query string, opts ...RequestOption) *Request {
 	req := &Request{
-		Context:   context.Background(),
-		Headers:   make(map[string]string),
+		ctx:       context.Background(),
+		headers:   make(map[string]string),
 		Query:     query,
 		Variables: make(map[string]interface{}),
 	}
@@ -31,7 +31,7 @@ type RequestOption func(*Request)
 //  NewRequest(query, WithContext(ctx))
 func WithContext(ctx context.Context) RequestOption {
 	return func(r *Request) {
-		r.Context = ctx
+		r.ctx = ctx
 	}
 }
 
@@ -39,7 +39,7 @@ func WithContext(ctx context.Context) RequestOption {
 //  NewRequest(query, WithHeader(key, value))
 func WithHeader(key string, value string) RequestOption {
 	return func(r *Request) {
-		r.Headers[key] = value
+		r.headers[key] = value
 	}
 }
 

@@ -14,23 +14,23 @@ type RequestBuilder func(endpoint string, req *Request) (*http.Request, error)
 
 // Client is a client for interacting with a GraphQL API.
 type Client struct {
-	Endpoint       string
-	HTTPClient     HTTPClient
-	DefaultHeaders map[string]string
-	RequestBuilder RequestBuilder
+	endpoint       string
+	httpClient     HTTPClient
+	defaultHeaders map[string]string
+	requestBuilder RequestBuilder
 }
 
 // NewClient makes a new Client capable of making GraphQL requests.
 func NewClient(endpoint string, opts ...ClientOption) *Client {
 	client := &Client{
-		Endpoint:       endpoint,
-		HTTPClient:     http.DefaultClient,
-		DefaultHeaders: make(map[string]string),
-		RequestBuilder: JSON,
+		endpoint:       endpoint,
+		httpClient:     http.DefaultClient,
+		defaultHeaders: make(map[string]string),
+		requestBuilder: JSONRequestBuilder,
 	}
 
 	// Set default Accept header
-	client.DefaultHeaders["Accept"] = "application/json; charset=utf-8"
+	client.defaultHeaders["Accept"] = "application/json; charset=utf-8"
 
 	// Parse options
 	for _, optionFunc := range opts {
@@ -44,24 +44,24 @@ func NewClient(endpoint string, opts ...ClientOption) *Client {
 // object. Pass in a nil response object to skip response parsing. If the request fails or the
 // server returns an error, the first error will be returned.
 func (c *Client) Do(req *Request, resp interface{}) (err error) {
-	httpReq, err := c.RequestBuilder(c.Endpoint, req)
+	httpReq, err := c.requestBuilder(c.endpoint, req)
 	if err != nil {
 		return fmt.Errorf("request builder: %w", err)
 	}
-	httpReq = httpReq.WithContext(req.Context)
+	httpReq = httpReq.WithContext(req.ctx)
 
 	// Set default headers.
-	for key, value := range c.DefaultHeaders {
+	for key, value := range c.defaultHeaders {
 		httpReq.Header.Set(key, value)
 	}
 
 	// Set request headers.
-	for key, value := range req.Headers {
+	for key, value := range req.headers {
 		httpReq.Header.Set(key, value)
 	}
 
 	// Do the request.
-	httpResp, err := c.HTTPClient.Do(httpReq)
+	httpResp, err := c.httpClient.Do(httpReq)
 	if err != nil {
 		return fmt.Errorf("do request: %w", err)
 	}
@@ -76,9 +76,9 @@ func (c *Client) Do(req *Request, resp interface{}) (err error) {
 	var gqlResp responseWithErrors
 	if resp == nil {
 		// Skip data decoding if there is nothing to decode into. Only decode errors if they exist.
-		gqlResp = &ErrorsResponse{}
+		gqlResp = &errorsResponse{}
 	} else {
-		gqlResp = &Response{Data: resp}
+		gqlResp = &response{Data: resp}
 	}
 	if err := json.NewDecoder(httpResp.Body).Decode(gqlResp); err != nil {
 		// GraphQL endpoints should always return a 200, as per GraphQL spec. So, if there was was a
@@ -90,8 +90,8 @@ func (c *Client) Do(req *Request, resp interface{}) (err error) {
 	}
 
 	// Return the GraphQL errors, if any.
-	if len(gqlResp.GetErrors()) > 0 {
-		return gqlResp.GetErrors()
+	if len(gqlResp.getErrors()) > 0 {
+		return gqlResp.getErrors()
 	}
 	return nil
 }
@@ -103,7 +103,7 @@ type ClientOption func(*Client)
 //  NewClient(endpoint, WithHTTPClient(specificHTTPClient))
 func WithHTTPClient(httpclient HTTPClient) ClientOption {
 	return func(client *Client) {
-		client.HTTPClient = httpclient
+		client.httpClient = httpclient
 	}
 }
 
@@ -111,7 +111,7 @@ func WithHTTPClient(httpclient HTTPClient) ClientOption {
 //  NewClient(endpoint, WithDefaultHeader(key, value))
 func WithDefaultHeader(key string, value string) ClientOption {
 	return func(client *Client) {
-		client.DefaultHeaders[key] = value
+		client.defaultHeaders[key] = value
 	}
 }
 
@@ -119,6 +119,6 @@ func WithDefaultHeader(key string, value string) ClientOption {
 //  NewClient(endpoint, WithDefaultHeader(key, value))
 func WithRequestBuilder(builder RequestBuilder) ClientOption {
 	return func(client *Client) {
-		client.RequestBuilder = builder
+		client.requestBuilder = builder
 	}
 }

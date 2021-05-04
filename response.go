@@ -9,22 +9,22 @@ import (
 )
 
 type responseWithErrors interface {
-	GetErrors() ErrorList
+	getErrors() ErrorList
 }
 
-// Response contains the default data and errors entries of a GraphQL response.
-type Response struct {
+// response contains the default data and errors entries of a GraphQL response.
+type response struct {
 	Data interface{} `json:"data,omitempty"`
-	ErrorsResponse
+	errorsResponse
 }
 
-// ErrorsResponse contains only the errors entry of a GraphQL response.
-type ErrorsResponse struct {
+// errorsResponse contains only the errors entry of a GraphQL response.
+type errorsResponse struct {
 	Errors ErrorList `json:"errors,omitempty"`
 }
 
 // GetErrors returns the errors that were returned in a GraphQL response.
-func (r ErrorsResponse) GetErrors() ErrorList {
+func (r errorsResponse) getErrors() ErrorList {
 	return r.Errors
 }
 
