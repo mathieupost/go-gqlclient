@@ -21,7 +21,7 @@ func TestSuiteMultipart(t *testing.T) {
 
 func (s *SuiteMultipart) TestEndpoint() {
 	req := gql.NewRequest("query {}")
-	r, err := gql.Multipart("https://endpoint/query", req)
+	r, err := gql.MultipartRequestBuilder("https://endpoint/query", req)
 	s.NoError(err)
 	s.Equal(http.MethodPost, r.Method)
 	s.Equal("https", r.URL.Scheme)
@@ -31,14 +31,14 @@ func (s *SuiteMultipart) TestEndpoint() {
 
 func (s *SuiteMultipart) TestInvalidEndpoint() {
 	req := gql.NewRequest("query {}")
-	_, err := gql.Multipart("\r", req)
+	_, err := gql.MultipartRequestBuilder("\r", req)
 	var urlErr *url.Error
 	s.ErrorAs(err, &urlErr)
 }
 
 func (s *SuiteMultipart) TestBody() {
 	req := gql.NewRequest("query {}", gql.WithVar("key", "value"))
-	r, err := gql.Multipart("https://endpoint/query", req)
+	r, err := gql.MultipartRequestBuilder("https://endpoint/query", req)
 	s.NoError(err)
 
 	s.Equal("query {}", r.PostFormValue("query"))
@@ -47,7 +47,7 @@ func (s *SuiteMultipart) TestBody() {
 
 func (s *SuiteMultipart) TestContentType() {
 	req := gql.NewRequest("query {}")
-	r, err := gql.Multipart("https://endpoint/query", req)
+	r, err := gql.MultipartRequestBuilder("https://endpoint/query", req)
 	s.NoError(err)
 
 	s.Contains(r.Header.Get("Content-Type"), "multipart/form-data;")

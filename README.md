@@ -22,7 +22,6 @@ $ go get github.com/weavedev/go-gqlclient
 ```go
 import (
 	gql "github.com/weavedev/go-gqlclient"
-	"github.com/weavedev/go-gqlclient/builders"
 )
 
 
@@ -34,8 +33,8 @@ client := gql.NewClient(
 	gql.WithDefaultHeader("Authorization", "Bearer " + token),
 	// Use a custom http.Client.
 	gql.WithHTTPClient(customClient),
-	// Use another request builder (default: builders.JSON).
-	gql.WithRequestBuilder(builders.Multipart),
+	// Use another request builder (default: gql.JSONRequestBuilder).
+	gql.WithRequestBuilder(gql.MultipartRequestBuilder),
 )
 
 // Make a request

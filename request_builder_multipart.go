@@ -8,8 +8,8 @@ import (
 	"net/http"
 )
 
-// Multipart creates an http.Request based on a GraphQL Request using multipart encoding.
-func Multipart(endpoint string, req *Request) (*http.Request, error) {
+// MultipartRequestBuilder creates an http.Request based on a GraphQL Request using multipart encoding.
+func MultipartRequestBuilder(endpoint string, req *Request) (*http.Request, error) {
 	// Encode the request as multipart request
 	var requestBody bytes.Buffer
 	writer := multipart.NewWriter(&requestBody)
@@ -39,7 +39,7 @@ func Multipart(endpoint string, req *Request) (*http.Request, error) {
 		return nil, fmt.Errorf("create multipart request: %w", err)
 	}
 
-	// Set json content type
+	// Set multipart content type
 	r.Header.Set("Content-Type", writer.FormDataContentType())
 
 	return r, nil

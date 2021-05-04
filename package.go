@@ -2,7 +2,6 @@
 //
 //  import (
 //      gql "github.com/weavedev/go-gqlclient"
-//      "github.com/weavedev/go-gqlclient/builders"
 //  )
 //
 // Create a client (safe to share across requests)
@@ -13,8 +12,8 @@
 //      gql.WithDefaultHeader("Authorization", "Bearer " + token),
 //      // Use a custom http.Client.
 //      gql.WithHTTPClient(customClient),
-//      // Use another request builder (default: builders.JSON).
-//      gql.WithRequestBuilder(builders.Multipart),
+//      // Use another request builder (default: gql.JSONRequestBuilder).
+//      gql.WithRequestBuilder(gql.MultipartRequestBuilder),
 //  )
 //
 // Make a request

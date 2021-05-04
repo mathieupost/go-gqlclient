@@ -7,8 +7,8 @@ import (
 	"net/http"
 )
 
-// JSON creates an http.Request based on a GraphQL Request using a json encoding.
-func JSON(endpoint string, req *Request) (*http.Request, error) {
+// JSONRequestBuilder creates an http.Request based on a GraphQL Request using a json encoding.
+func JSONRequestBuilder(endpoint string, req *Request) (*http.Request, error) {
 	// Encode the request as json
 	var requestBody bytes.Buffer
 	if err := json.NewEncoder(&requestBody).Encode(req); err != nil {

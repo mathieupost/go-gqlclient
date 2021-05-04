@@ -22,7 +22,7 @@ func TestSuiteJSONRequestBuilder(t *testing.T) {
 
 func (s *SuiteJSONRequestBuilder) TestEndpoint() {
 	req := gql.NewRequest("query {}")
-	r, err := gql.JSON("https://endpoint/query", req)
+	r, err := gql.JSONRequestBuilder("https://endpoint/query", req)
 	s.NoError(err)
 	s.Equal(http.MethodPost, r.Method)
 	s.Equal("https", r.URL.Scheme)
@@ -32,14 +32,14 @@ func (s *SuiteJSONRequestBuilder) TestEndpoint() {
 
 func (s *SuiteJSONRequestBuilder) TestInvalidEndpoint() {
 	req := gql.NewRequest("query {}")
-	_, err := gql.JSON("\r", req)
+	_, err := gql.JSONRequestBuilder("\r", req)
 	var urlErr *url.Error
 	s.ErrorAs(err, &urlErr)
 }
 
 func (s *SuiteJSONRequestBuilder) TestBody() {
 	req := gql.NewRequest("query {}", gql.WithVar("key", "value"))
-	r, err := gql.JSON("https://endpoint/query", req)
+	r, err := gql.JSONRequestBuilder("https://endpoint/query", req)
 	s.NoError(err)
 
 	bodyBuffer := new(bytes.Buffer)
@@ -50,7 +50,7 @@ func (s *SuiteJSONRequestBuilder) TestBody() {
 
 func (s *SuiteJSONRequestBuilder) TestContentType() {
 	req := gql.NewRequest("query {}")
-	r, err := gql.JSON("https://endpoint/query", req)
+	r, err := gql.JSONRequestBuilder("https://endpoint/query", req)
 	s.NoError(err)
 
 	s.Equal("application/json; charset=utf-8", r.Header.Get("Content-Type"))
